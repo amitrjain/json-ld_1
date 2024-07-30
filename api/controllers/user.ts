@@ -40,20 +40,20 @@ class UserController {
   }
 
   // Static method to save user info from a Fastify request.
-  public static async saveUserInfo(request: FastifyRequest<{ Body: UserBody }>, reply: FastifyReply) {
+  public static async saveUserInfo(request: FastifyRequest<{ Body: any }>, reply: FastifyReply) {
     // Extract user data from the request body.
-    const { first_name, last_name, phone_no, ssn, card_no, cvv_no, expiry_date } = request.body;
+    const { body }: any = request;
 
     // Create a new user object with JSON-LD context.
     const user: UserBody = {
       "@context": context["@context"],
-      "first_name": first_name,
-      "last_name": last_name,
-      "phone_no": phone_no,
-      "ssn": ssn,
-      "cardNumber": card_no,
-      "cvvNumber": cvv_no,
-      "expiryDate": expiry_date
+      "first_name": body.first_name,
+      "last_name": body.last_name,
+      "phone_no": body.phone_no,
+      "ssn": body.ssn,
+      "cardNumber": body.card_no,
+      "cvvNumber": body.cvv_no,
+      "expiryDate": body.expiry_date
     };
 
     // Get the singleton instance and add user to the store.
