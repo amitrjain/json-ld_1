@@ -1,0 +1,30 @@
+{
+  "name": "contact-api",
+  "version": "1.0.0",
+  "description": "Contact API with JSON-LD context and field masking",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "npx tsx watch --clear-screen=false api/index.ts",
+    "build": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json",
+    "ts.check": "tsc -p tsconfig.json",
+    "start": "node dist/api/index.js"
+  },
+  "dependencies": {
+    "@fastify/cors": "^9.0.1",
+    "@types/jsonld": "^1.5.15",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "fastify": "^4.28.1",
+    "jsonld": "^8.3.2",
+    "n3": "^1.17.4",
+    "tsconfig-paths": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/n3": "^1.16.4",
+    "@types/node": "^20.14.5",
+    "dotenv": "^16.4.5",
+    "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.10",
+    "typescript": "^5.4.5"
+  }
+}

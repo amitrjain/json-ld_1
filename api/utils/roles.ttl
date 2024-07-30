@@ -1,0 +1,14 @@
+@prefix schema: <http://schema.org/> .
+@prefix ex: <http://example.com/roles#> .
+
+ex:ADMIN a ex:Role ;
+    ex:canView schema:givenName, schema:familyName, schema:telephone, schema:nationalID .
+
+ex:PCI_ADMIN a ex:Role ;
+    ex:canView schema:givenName, schema:familyName, schema:telephone, schema:card, schema:cvv, schema:validThrough .
+
+ex:USER a ex:Role ;
+    ex:canView schema:givenName, schema:familyName, schema:telephone .
+
+ex:PUBLIC a ex:Role ;
+    ex:canView schema:givenName, schema:familyName, schema:telephone .

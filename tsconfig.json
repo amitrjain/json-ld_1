@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS",
+    "target": "ES6",
+    "sourceMap": true,
+    "strict": true,
+    "declaration": true,
+    "moduleResolution": "Node",
+    "useUnknownInCatchVariables": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "dist",
+    "esModuleInterop": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "baseUrl": ".",
+    "paths": {
+      "@api/*": [
+        "api/*"
+      ]
+    },
+    "skipLibCheck": true
+  },
+  "exclude": [
+    "node_modules",
+    "./dist/**/*"
+  ]
+}

@@ -1,0 +1,5 @@
+- Add USER ROLE in Header  
+  - USER ROLE = ADMIN  -- GET the SSN but masked Card Details.
+  - USER ROLE = PCI_ADMIN -- Get card details but not SSN.
+  - USER ROLE = USER -- Get masked ssn and card number data.
+  - USER ROLE = PUBLIC -- ssn and card related fields should not be displayed.
