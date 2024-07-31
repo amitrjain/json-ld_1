@@ -26,17 +26,18 @@ const maskRoleBasedData = async (
 
       Object.keys(compactedUser).forEach((key: string) => {
         const propertyIri = user['@context'][key];
-
+        
+        const fieldMeta = metadata[propertyIri];
         if (key !== '@context' && !allowedProperties.includes(propertyIri)) {
-          const fieldMeta = metadata[propertyIri];
+          
           console.log(key, fieldMeta?.sensitive, fieldMeta?.PCI);
+          
+          delete maskedContact[key]; // Remove fields that are not allowed and not sensitive
 
-          if (fieldMeta?.sensitive || fieldMeta?.PCI) {
-            maskedContact[key] = maskField(compactedUser[key]);
-          } else {
-            delete maskedContact[key]; // Remove fields that are not allowed and not sensitive
-          }
+        } else if (fieldMeta?.sensitive || fieldMeta?.PCI) {
+          maskedContact[key] = maskField(compactedUser[key]);
         }
+
       });
 
       if (!showContext) {
