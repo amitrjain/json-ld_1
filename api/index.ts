@@ -12,7 +12,6 @@ export const main = async () => {
       console.info("INIT", `Server listening at ${address}`);
     });
   } catch (e) {
-    console.log("fofoff", e)
   }
 }
 
