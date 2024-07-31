@@ -86,7 +86,12 @@ ex:SensitiveDataShape a sh:NodeShape ;
     sh:property [
         sh:path schema:nationalID ;
         sh:datatype xsd:string ;
-    ] .
+    ] ;
+    sh:property [
+        sh:path schema:familyName ;
+        sh:datatype xsd:string ;
+    ]   .
+
 
 ex:PCIDataShape a sh:NodeShape ;
     sh:property [
