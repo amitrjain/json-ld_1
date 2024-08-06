@@ -1,43 +1,47 @@
 import { UserBody } from "@api/routes/schema";
 import { extractFieldMetadataFromShape, getAllowedProperties } from "@api/utils/shaclValidator";
-import * as jsonld from 'jsonld';
 import { FastifyReply, FastifyRequest } from "fastify";
+import * as jsonld from 'jsonld';
 
-const maskField = (value: any) => {
+const maskField = (value: any, maskingType: string) => {
   if (typeof value === 'string') {
-    return value.replace(/./g, '*'); // Simple masking example
+    if (maskingType === 'full') {
+      return value.replace(/./g, '*'); // Fully mask sensitive data
+    } else if (maskingType === 'partial') {
+      return value.slice(-4).padStart(value.length, '*'); // Mask all but the last 4 digits for PCI data
+    }
   }
   return value;
 };
 
-const maskRoleBasedData = async (
+export const maskRoleBasedData = async (
   data: UserBody[],
   role: string,
   showContext: boolean
 ): Promise<any[]> => {
   try {
+    const roleUri = `http://example.com/roles#${role}`;
+    const metadata = await extractFieldMetadataFromShape(roleUri);
+
+    console.log("metadata", metadata)
     return await Promise.all(data.map(async (user) => {
       let maskedContact: any = { ...user };
       const compactedUser = await jsonld.compact(user, user['@context']);
 
       // Retrieve the allowed properties for the role using SHACL validation
       const allowedProperties = await getAllowedProperties(role);
-      const metadata = await extractFieldMetadataFromShape();
 
       Object.keys(compactedUser).forEach((key: string) => {
         const propertyIri = user['@context'][key];
-        
-        const fieldMeta = metadata[propertyIri];
-        if (key !== '@context' && !allowedProperties.includes(propertyIri)) {
-          
-          console.log(key, fieldMeta?.sensitive, fieldMeta?.PCI);
-          
-          delete maskedContact[key]; // Remove fields that are not allowed and not sensitive
-
-        } else if (fieldMeta?.sensitive || fieldMeta?.PCI) {
-          maskedContact[key] = maskField(compactedUser[key]);
+        if (key !== '@context') {
+          if (!allowedProperties.includes(propertyIri)) {
+            delete maskedContact[key];
+          } else {
+            const fieldMeta = metadata[propertyIri];
+            console.log("fieldMeta")
+            maskedContact[key] = maskField(compactedUser[key], fieldMeta?.maskingType)
+          }
         }
-
       });
 
       if (!showContext) {
@@ -51,6 +55,7 @@ const maskRoleBasedData = async (
     throw error;
   }
 };
+
 
 export const handleMaskingData = async (
   request: FastifyRequest,

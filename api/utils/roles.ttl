@@ -1,30 +1,9 @@
 @prefix schema: <http://schema.org/> .
 @prefix ex: <http://example.com/roles#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix xsd: <http://example.com/dataType#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-# Sensitive data elements
-ex:SensitiveData a ex:DataElement ;
-    schema:includes schema:nationalID .
-
-# PCI data elements
-ex:PCIData a ex:DataElement ;
-    schema:includes schema:card, schema:cvv, schema:validThrough .
-
-# Role definitions with data shapes
-ex:ADMIN a ex:Role ;
-    ex:canView schema:givenName, schema:familyName, schema:telephone, ex:SensitiveData .
-
-ex:PCI_ADMIN a ex:Role ;
-    ex:canView schema:givenName, schema:familyName, ex:PCIData .
-
-ex:USER a ex:Role ;
-    ex:canView schema:givenName, schema:familyName, schema:telephone .
-
-ex:PUBLIC a ex:Role ;
-    ex:canView schema:givenName, schema:familyName .
-
-# SHACL shapes for validation
+#SHACL for Shape, access, data policy by role 
 ex:AdminShape a sh:NodeShape ;
     sh:targetClass ex:ADMIN ;
     sh:property [
@@ -36,8 +15,27 @@ ex:AdminShape a sh:NodeShape ;
         sh:datatype xsd:string ;
     ] ;
     sh:property [
-        sh:path ex:SensitiveData ;
-        sh:node ex:SensitiveDataShape ;
+        sh:path schema:nationalID ;
+        sh:datatype xsd:string ;
+        ex:sensitive true ;
+    ] ;
+    sh:property [
+        sh:path schema:card ;
+        sh:datatype xsd:string ;
+        ex:PCI true ;
+        ex:maskingType "partial" ;
+    ] ;
+    sh:property [
+        sh:path schema:cvv ;
+        sh:datatype xsd:string ;
+        ex:PCI true ;
+        ex:maskingType "full" ;
+    ] ;
+    sh:property [
+        sh:path schema:validThrough ;
+        sh:datatype xsd:string ;
+        ex:PCI true ;
+        ex:maskingType "full" ;
     ] .
 
 ex:PCIAdminShape a sh:NodeShape ;
@@ -51,8 +49,28 @@ ex:PCIAdminShape a sh:NodeShape ;
         sh:datatype xsd:string ;
     ] ;
     sh:property [
-        sh:path ex:PCIData ;
-        sh:node ex:PCIDataShape ;
+        sh:path schema:nationalID ;
+        sh:datatype xsd:string ;
+        ex:sensitive true ;
+        ex:maskingType "full" ;
+    ] ;
+    sh:property [
+        sh:path schema:card ;
+        sh:datatype xsd:string ;
+        ex:PCI true ;
+        ex:maskingType "none" ;
+    ] ;
+    sh:property [
+        sh:path schema:cvv ;
+        sh:datatype xsd:string ;
+        ex:PCI true ;
+        ex:maskingType "none" ;
+    ] ;
+    sh:property [
+        sh:path schema:validThrough ;
+        sh:datatype xsd:string ;
+        ex:PCI true ;
+        ex:maskingType "none" ;
     ] .
 
 ex:UserShape a sh:NodeShape ;
@@ -66,43 +84,14 @@ ex:UserShape a sh:NodeShape ;
         sh:datatype xsd:string ;
     ] ;
     sh:property [
-        sh:path schema:telephone ;
-        sh:datatype xsd:string ;
-    ] .
-
-ex:PublicShape a sh:NodeShape ;
-    sh:targetClass ex:PUBLIC ;
-    sh:property [
-        sh:path schema:givenName ;
-        sh:datatype xsd:string ;
-    ] ;
-    sh:property [
-        sh:path schema:familyName ;
-        sh:datatype xsd:string ;
-    ] .
-
-# SHACL shapes for sensitive and PCI data
-ex:SensitiveDataShape a sh:NodeShape ;
-    sh:property [
         sh:path schema:nationalID ;
         sh:datatype xsd:string ;
+        ex:sensitive true ;
+        ex:maskingType "partial" ;
     ] ;
-    sh:property [
-        sh:path schema:familyName ;
-        sh:datatype xsd:string ;
-    ]   .
-
-
-ex:PCIDataShape a sh:NodeShape ;
     sh:property [
         sh:path schema:card ;
         sh:datatype xsd:string ;
-    ] ;
-    sh:property [
-        sh:path schema:cvv ;
-        sh:datatype xsd:string ;
-    ] ;
-    sh:property [
-        sh:path schema:validThrough ;
-        sh:datatype xsd:date ;
+        ex:PCI true ;
+        ex:maskingType "partial" ;
     ] .
