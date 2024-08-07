@@ -1,0 +1,57 @@
+@base <https://schema.xyz.com> .
+@prefix : <https://data.xyz.com/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix owl:<http://www.w3.org/2002/07/owl#> .
+@prefix s: <https://schema.org/> .
+
+<#Person>    
+    a rdfs:Class ;    
+    rdfs:comment "A person." .
+
+<#UnitedStatesCitizen>   
+    a rdfs:Class ;    
+    rdfs:comment "A person who is a citizen of the United States." ;    
+    rdfs:subClassOf <#Person> .
+
+<#firstName>    
+    a owl:DatatypeProperty ;    
+    rdfs:comment "The first name of a person." ;    
+    rdfs:domain <#Person> .
+s:givenName 
+    owl:equivalentProperty <#givenName> .
+
+<#lastName>    
+    a owl:DatatypeProperty ;    
+    rdfs:comment "The last name of a person." ;    
+    rdfs:domain <#Person> .
+
+<#socialSecurityNumber>    
+    a owl:DatatypeProperty ;    
+    rdfs:comment "The social security number of a person." ;    
+    rdfs:domain <#UnitedStatesCitizen> ;    
+    <#dataClassification> :Sensitive .
+
+<#DataClassification>    
+    a rdfs:Class ;    
+    rdfs:comment "A classification of data." .
+
+# TODO: consider whether applying domain and range makes sense for the demo
+
+<#hasAuthorizationPolicy>    
+    a owl:ObjectProperty ;    
+    rdfs:comment "A policy that applies to a resource." .
+    
+<#AuthorizationPolicy>        
+    a rdfs:Class ;        
+    rdfs:comment "A policy that defines who can access what data." .
+
+:sensitive        
+    a <#DataClassification> ;        
+    rdfs:comment "Data that requires protection" ;        
+    <#hasAuthorizationPolicy> :policy123 .
+
+:policy123        
+    a <#AuthorizationPolicy> ;        
+    rdfs:comment "Example of a policy that can provide directives to an agent on how to process data." .
